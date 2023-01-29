@@ -28,13 +28,13 @@ const Paypal = () => {
   const handlApprove = (orderId) => {
     setPaidFor(true)
     console.log("orderId", orderId)
-    alert("Transaction completed by " + paymentData.payer.name.given_name + "!")
   }
 
   if (paidFor) {
     alert(
       "Thank you for your purchase. You will receive an email confirmation shortly."
     )
+    console.log(paymentData)
     return (
       <div>
         <p>
@@ -66,11 +66,11 @@ const Paypal = () => {
         createOrder={(data, actions) => {
           return actions.order.create(orderData)
         }}
-        onApprove={(data, actions) => {
+        onApprove={async (data, actions) => {
           console.log("onApprove", data)
-          const order = actions.order.capture()
+          const order = await actions.order.capture()
           console.log("order", order)
-          console.log(order?.value)
+          alert("Transaction completed by " + order.payer.name.given_name + "!")
           setPaymentData(order)
           handlApprove(data.orderID)
         }}
